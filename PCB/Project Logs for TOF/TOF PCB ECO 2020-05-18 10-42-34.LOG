@@ -1,0 +1,9 @@
+Added Pin To Net: NetName=LED_B Pin=R3-1
+Added Pin To Net: NetName=LED_B Pin=U1-33
+Added Net: Name=LED_B
+Added Pin To Net: NetName=LED_G Pin=R2-1
+Added Pin To Net: NetName=LED_G Pin=U1-39
+Added Net: Name=LED_G
+Added Pin To Net: NetName=LED_R Pin=R1-1
+Added Pin To Net: NetName=LED_R Pin=U1-38
+Added Net: Name=LED_R

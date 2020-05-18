@@ -1,0 +1,15 @@
+Removed Pin From Net: NetName=SPI1_MOSI Pin=J1-5
+Removed Pin From Net: NetName=SPI1_SCK Pin=J1-6
+Removed Pin From Net: NetName=SPI2_SCK Pin=SPI_Slave-2
+Removed Pin From Net: NetName=SPI2_MISO Pin=SPI_Slave-3
+Removed Pin From Net: NetName=SPI2_MOSI Pin=SPI_Slave-4
+Removed Pin From Net: NetName=SPI2_CS Pin=SPI_Slave-5
+Added Pin To Net: NetName=SPI2_MOSI Pin=J1-5
+Added Pin To Net: NetName=SPI2_SCK Pin=J1-6
+Added Pin To Net: NetName=SPI2_CS Pin=J1-8
+Added Pin To Net: NetName=SPI1_SCK Pin=SPI_Slave-2
+Added Pin To Net: NetName=SPI1_MISO Pin=SPI_Slave-3
+Added Pin To Net: NetName=SPI1_MOSI Pin=SPI_Slave-4
+Added Pin To Net: NetName=SPI1_CS Pin=SPI_Slave-5
+Added Pin To Net: NetName=SPI1_CS Pin=U1-14
+Added Net: Name=SPI1_CS

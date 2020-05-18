@@ -1,0 +1,3 @@
+Removed Pin From Net: NetName=PB4 Pin=U1-40
+Change Component DesignItemId : Designator=LS1 Old DesignItemId= New DesignItemId=Speaker
+Added Pin To Net: NetName=PB4 Pin=U1-46
