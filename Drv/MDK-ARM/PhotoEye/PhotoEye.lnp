@@ -1,0 +1,26 @@
+--cpu Cortex-M3
+"photoeye\startup_stm32f103xb.o"
+"photoeye\oled.o"
+"photoeye\main.o"
+"photoeye\stm32f1xx_it.o"
+"photoeye\stm32f1xx_hal_msp.o"
+"photoeye\stm32f1xx_hal_gpio_ex.o"
+"photoeye\stm32f1xx_hal_spi.o"
+"photoeye\stm32f1xx_hal.o"
+"photoeye\stm32f1xx_hal_rcc.o"
+"photoeye\stm32f1xx_hal_rcc_ex.o"
+"photoeye\stm32f1xx_hal_gpio.o"
+"photoeye\stm32f1xx_hal_dma.o"
+"photoeye\stm32f1xx_hal_cortex.o"
+"photoeye\stm32f1xx_hal_pwr.o"
+"photoeye\stm32f1xx_hal_flash.o"
+"photoeye\stm32f1xx_hal_flash_ex.o"
+"photoeye\stm32f1xx_hal_exti.o"
+"photoeye\stm32f1xx_hal_tim.o"
+"photoeye\stm32f1xx_hal_tim_ex.o"
+"photoeye\stm32f1xx_hal_uart.o"
+"photoeye\system_stm32f1xx.o"
+--library_type=microlib --strict --scatter "PhotoEye\PhotoEye.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "PhotoEye.map" -o PhotoEye\PhotoEye.axf
