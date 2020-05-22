@@ -24,7 +24,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "oled.h"
-
+#include "I2C_Soft.h"
+#include "uart.h"
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -110,6 +112,7 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 	__HAL_SPI_ENABLE(&hspi2);
+	SPI2->CR1 &= 0xffffffc7;
 	LCD_Init();
 	
 	HAL_TIM_Base_Start_IT(&htim2);//GUI update function	
@@ -119,7 +122,7 @@ int main(void)
 	LED_B = 1;
 	BK = 1;
 	//Laser = 1;
-	
+	printf("TOF online.\r\n");
 	
 
   /* USER CODE END 2 */
@@ -128,9 +131,18 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+		uint16_t color = 0xff00;
+		uint16_t bias = 0;
   while (1)
   {
     /* USER CODE END WHILE */
+		while(1){
+			VL_XSHUT = 1;
+			IIC1_Test();
+		}
+		bias++;
+		if(bias==32)bias=0;
+		LCD_Clear(color+bias);
 
     /* USER CODE BEGIN 3 */
   }

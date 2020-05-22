@@ -29,3 +29,6 @@ photoeye\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 photoeye\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 photoeye\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
 photoeye\main.o: ..\MDK-ARM\oled.h
+photoeye\main.o: ..\MDK-ARM\I2C_Soft.h
+photoeye\main.o: ..\MDK-ARM\uart.h
+photoeye\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
