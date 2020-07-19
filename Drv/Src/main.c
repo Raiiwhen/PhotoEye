@@ -27,6 +27,7 @@
 #include "I2C_Soft.h"
 #include "uart.h"
 #include <stdio.h>
+#include "vl53l0x.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -121,10 +122,16 @@ int main(void)
 	LED_G = 1;
 	LED_B = 1;
 	BK = 1;
-	//Laser = 1;
+	Laser = 1;
+	VL_XSHUT = 1; //enable VL53L0x
+	
 	printf("TOF online.\r\n");
 	
-
+	VL53L0X_Dev_t vl53l0x_dev;
+	if(VL53L0X_ERROR_NONE != vl53l0x_init(&vl53l0x_dev))
+		printf("vl53l0x_init failed!");
+	if(VL53L0X_ERROR_NONE != vl53l0x_set_mode(&vl53l0x_dev,0))
+		printf("vl53l0x_set_mode status failed!");
   /* USER CODE END 2 */
  
  
@@ -136,13 +143,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-		while(1){
-			VL_XSHUT = 1;
-			IIC1_Test();
-		}
-		bias++;
-		if(bias==32)bias=0;
-		LCD_Clear(color+bias);
+	One_measurement(&vl53l0x_dev);
 
     /* USER CODE BEGIN 3 */
   }
@@ -438,17 +439,17 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6 
-                          |GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_7 
+                          |GPIO_PIN_8|GPIO_PIN_9, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_12 
                           |GPIO_PIN_15, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : PB12 PB4 PB5 PB6 
-                           PB7 PB8 PB9 */
-  GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6 
-                          |GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9;
+  /*Configure GPIO pins : PB12 PB4 PB5 PB7 
+                           PB8 PB9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_7 
+                          |GPIO_PIN_8|GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -462,6 +463,16 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PB6 */
+  GPIO_InitStruct.Pin = GPIO_PIN_6;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 }
 

@@ -19,3 +19,4 @@ eMail masterraii@icloud.com
 
 * 2020-05-22 完成制造和装配
   * 调通LCD(无GUI，非DMA)
+  * 添加IIC和UART通信

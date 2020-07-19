@@ -1,11 +1,12 @@
 --cpu Cortex-M3
 "photoeye\startup_stm32f103xb.o"
 "photoeye\oled.o"
+"photoeye\i2c_soft.o"
+"photoeye\uart.o"
+"photoeye\vl53l0x.o"
 "photoeye\main.o"
 "photoeye\stm32f1xx_it.o"
 "photoeye\stm32f1xx_hal_msp.o"
-"photoeye\i2c_soft.o"
-"photoeye\uart.o"
 "photoeye\stm32f1xx_hal_gpio_ex.o"
 "photoeye\stm32f1xx_hal_spi.o"
 "photoeye\stm32f1xx_hal.o"
@@ -22,6 +23,13 @@
 "photoeye\stm32f1xx_hal_tim_ex.o"
 "photoeye\stm32f1xx_hal_uart.o"
 "photoeye\system_stm32f1xx.o"
+"photoeye\vl53l0x_api.o"
+"photoeye\vl53l0x_api_calibration.o"
+"photoeye\vl53l0x_api_core.o"
+"photoeye\vl53l0x_api_ranging.o"
+"photoeye\vl53l0x_api_strings.o"
+"photoeye\vl53l0x_i2c.o"
+"photoeye\vl53l0x_platform.o"
 --library_type=microlib --strict --scatter "PhotoEye\PhotoEye.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

@@ -74,7 +74,7 @@ void IIC1_NAck(void){
 	delay_us(2);
 	IIC1_SCL=0;
 }
-void IIC1_Send_Byte(uint8_t txd){                        
+void IIC1_Send_Byte(uint8_t txd){
     uint8_t cnt;   
 		SDA1_OUT(); 	 
 	
@@ -89,6 +89,7 @@ void IIC1_Send_Byte(uint8_t txd){
 			delay_us(2);
     }	 
 }
+
 uint8_t IIC1_Read_Byte(unsigned char ack){
 	unsigned char cnt,temp=0;
 	SDA1_IN();//SDA设置为输入
@@ -112,17 +113,22 @@ uint8_t IIC1_Read_One_Byte(uint8_t addr, uint8_t reg){
 	uint8_t  data;
 	IIC1_Start();
 	
-	IIC1_Send_Byte(0x40);
+	IIC1_Send_Byte(addr<<1);
 	IIC1_Wait_Ack();
+	
 	IIC1_Send_Byte(reg);
 	IIC1_Wait_Ack();
+	
 	IIC1_Start();
-	IIC1_Send_Byte(0xc0);
+	
+	IIC1_Send_Byte(addr<<1|1);
 	IIC1_Wait_Ack();
+	
 	data = IIC1_Read_Byte(0);
 	IIC1_NAck();
 
 	IIC1_Stop();
+	
 	return data;
 }
 
@@ -155,7 +161,7 @@ void IIC1_Test(void){
 //	}
 /*Byte Send Tesst*/
 //	while(1)	IIC1_Send_Byte(0xd6);//1101 0110
-/*List all address that has ACK*/
+///*List all address that has ACK*/
 	IIC1_Slave_List();
 	while(1){};
 }
@@ -185,10 +191,10 @@ void IIC1_Slave_List(void){
 		}
 		if(ucErrTime<250){
 			printf("Console>IIC1:  |DeviceCNT.%3d, IIC_ADDR = %#x\r\n",CNT, i);
-			for(;j<255;j++){
-				res = IIC1_Read_One_Byte(CNT,j);
-				printf("Console>IIC1:  |reg.%2X, %2X\r\n",j, res);
-			}
+//			for(;j<255;j++){
+//				res = IIC1_Read_One_Byte(CNT,j);
+//				printf("Console>IIC1:  |reg.%2X, %2X\r\n",j, res);
+//			}
 			CNT++;
 		}
 		IIC1_SCL=0;//时钟输出0 	   
