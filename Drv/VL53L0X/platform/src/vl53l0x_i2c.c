@@ -1,73 +1,235 @@
-/*
- * Copyright (c) 2006-2020, TJ Team
- *
- *
- * Change Logs:
- * Date           Author       Notes
- * 2020-03-17     唐文军       the first version
- */
-
 #include "vl53l0x_i2c.h"
-#include "I2C_Soft.h"
+#include "main.h"
+void delay_us(int us){
+	for (int i = 0; i < 72;i++){}
+}
 
-
-/* write n byte(s) to vl53l0x device */
-uint8_t VL_IIC_Write_nByte(uint8_t SlaveAddress, uint8_t REG_Address,uint16_t len, uint8_t *buf)
+//VL53L0X I2C初始化
+void VL53L0X_i2c_init(void)
 {
-	IIC1_Start();
-	IIC1_Send_Byte(SlaveAddress);//发写命令
-	if(IIC1_Wait_Ack()) 
+	VL_IIC_SDA=1;	  	  
+	VL_IIC_SCL=1;
+}
+
+//产生IIC起始信号
+void VL_IIC_Start(void)
+{
+	VL_SDA_OUT();//sda线输出
+	VL_IIC_SDA=1;	  	  
+	VL_IIC_SCL=1;
+	delay_us(4);
+ 	VL_IIC_SDA=0;//START:when CLK is high,DATA change form high to low 
+	delay_us(4);
+	VL_IIC_SCL=0;//钳住I2C总线，准备发送或接收数据 
+}
+
+//产生IIC停止信号
+void VL_IIC_Stop(void)
+{
+	VL_SDA_OUT();//sda线输出
+	VL_IIC_SCL=0;
+	VL_IIC_SDA=0;//STOP:when CLK is high DATA change form low to high
+ 	delay_us(4);
+	VL_IIC_SCL=1; 
+	VL_IIC_SDA=1;//发送I2C总线结束信号
+	delay_us(4);							   	
+}
+
+//等待应答信号到来
+//返回值：1，接收应答失败
+//        0，接收应答成功
+uint8_t VL_IIC_Wait_Ack(void)
+{
+	uint8_t ucErrTime=0;
+	VL_SDA_IN();  //SDA设置为输入  
+	VL_IIC_SDA=1;delay_us(1);	   
+	VL_IIC_SCL=1;delay_us(1);	 
+	while(VL_READ_SDA)
 	{
-		IIC1_Stop();//释放总线
+		ucErrTime++;
+		if(ucErrTime>250)
+		{
+			VL_IIC_Stop();
+			return 1;
+		}
+	}
+	VL_IIC_SCL=0;//时钟输出0 	   
+	return 0;  
+}
+
+//产生ACK应答
+void VL_IIC_Ack(void)
+{
+	VL_IIC_SCL=0;
+	VL_SDA_OUT();
+	VL_IIC_SDA=0;
+	delay_us(2);
+	VL_IIC_SCL=1;
+	delay_us(2);
+	VL_IIC_SCL=0;
+}
+
+//不产生ACK应答		    
+void VL_IIC_NAck(void)
+{
+	VL_IIC_SCL=0;
+	VL_SDA_OUT();
+	VL_IIC_SDA=1;
+	delay_us(2);
+	VL_IIC_SCL=1;
+	delay_us(2);
+	VL_IIC_SCL=0;
+}
+
+//IIC发送一个字节
+//返回从机有无应答
+//1，有应答
+//0，无应答			  
+void VL_IIC_Send_Byte(uint8_t txd)
+{                        
+    uint8_t t;   
+	VL_SDA_OUT(); 	    
+    VL_IIC_SCL=0;//拉低时钟开始数据传输
+    for(t=0;t<8;t++)
+    {              
+		if((txd&0x80)>>7)
+			VL_IIC_SDA=1;
+		else
+			VL_IIC_SDA=0;
+		txd<<=1; 	  
+		delay_us(2);  
+		VL_IIC_SCL=1;
+		delay_us(2); 
+		VL_IIC_SCL=0;	
+		delay_us(2);
+    }	 
+} 
+
+//读1个字节，ack=1时，发送ACK，ack=0，发送nACK   
+uint8_t VL_IIC_Read_Byte(unsigned char ack)
+{
+	unsigned char i,receive=0;
+	VL_SDA_IN();//SDA设置为输入
+	for(i=0;i<8;i++ )
+	{
+		VL_IIC_SCL=0; 
+		delay_us(4);
+	  VL_IIC_SCL=1;
+		receive<<=1;
+		if(VL_READ_SDA)receive++;   
+	  delay_us(4); //1
+	}					 
+	if (!ack)
+		VL_IIC_NAck();//发送nACK
+	else
+		VL_IIC_Ack(); //发送ACK   
+	return receive;
+}
+
+//IIC写一个字节数据
+uint8_t VL_IIC_Write_1Byte(uint8_t SlaveAddress, uint8_t REG_Address,uint8_t REG_data)
+{
+	VL_IIC_Start();
+	VL_IIC_Send_Byte(SlaveAddress);
+	if(VL_IIC_Wait_Ack())
+	{
+		VL_IIC_Stop();//释放总线
 		return 1;//没应答则退出
+
 	}
-	IIC1_Send_Byte(REG_Address);
-	IIC1_Wait_Ack();
-	while(len--)
-	{
-		IIC1_Send_Byte(*buf++);//发送buff的数据
-		IIC1_Wait_Ack();	
-	}
-	IIC1_Stop();//释放总线
+	VL_IIC_Send_Byte(REG_Address);
+	VL_IIC_Wait_Ack();	
+	VL_IIC_Send_Byte(REG_data);
+	VL_IIC_Wait_Ack();	
+	VL_IIC_Stop();
 
 	return 0;
 }
 
-/* read n byte(s) from vl53l0x device */
-uint8_t VL_IIC_Read_nByte(uint8_t SlaveAddress, uint8_t REG_Address,uint16_t len,uint8_t *buf)
+//IIC读一个字节数据
+uint8_t VL_IIC_Read_1Byte(uint8_t SlaveAddress, uint8_t REG_Address,uint8_t *REG_data)
 {
-	IIC1_Start();
-	IIC1_Send_Byte(SlaveAddress);//发写命令
-	if(IIC1_Wait_Ack()) 
+	VL_IIC_Start();
+	VL_IIC_Send_Byte(SlaveAddress);//发写命令
+	if(VL_IIC_Wait_Ack())
 	{
-		IIC1_Stop();//释放总线
+		 VL_IIC_Stop();//释放总线
+		 return 1;//没应答则退出
+	}		
+	VL_IIC_Send_Byte(REG_Address);
+	VL_IIC_Wait_Ack();
+	VL_IIC_Start(); 
+	VL_IIC_Send_Byte(SlaveAddress|0x01);//发读命令
+	VL_IIC_Wait_Ack();
+	*REG_data = VL_IIC_Read_Byte(0);
+	VL_IIC_Stop();
+
+	return 0;
+}
+
+//IIC写n字节数据
+uint8_t VL_IIC_Write_nByte(uint8_t SlaveAddress, uint8_t REG_Address,uint16_t len, uint8_t *buf)
+{
+	VL_IIC_Start();
+	VL_IIC_Send_Byte(SlaveAddress);//发写命令
+	if(VL_IIC_Wait_Ack()) 
+	{
+		VL_IIC_Stop();//释放总线
 		return 1;//没应答则退出
 	}
-	IIC1_Send_Byte(REG_Address);
-	IIC1_Wait_Ack();
+	VL_IIC_Send_Byte(REG_Address);
+	VL_IIC_Wait_Ack();
+	while(len--)
+	{
+		VL_IIC_Send_Byte(*buf++);//发送buff的数据
+		VL_IIC_Wait_Ack();	
+	}
+	VL_IIC_Stop();//释放总线
 
-	IIC1_Start();
-	IIC1_Send_Byte(SlaveAddress|0x01);//发读命令
-	IIC1_Wait_Ack();
+	return 0;
+	
+}
+
+//IIC读n字节数据
+uint8_t VL_IIC_Read_nByte(uint8_t SlaveAddress, uint8_t REG_Address,uint16_t len,uint8_t *buf)
+{
+	VL_IIC_Start();
+	VL_IIC_Send_Byte(SlaveAddress);//发写命令
+	if(VL_IIC_Wait_Ack()) 
+	{
+		VL_IIC_Stop();//释放总线
+		return 1;//没应答则退出
+	}
+	VL_IIC_Send_Byte(REG_Address);
+	VL_IIC_Wait_Ack();
+
+	VL_IIC_Start();
+	VL_IIC_Send_Byte(SlaveAddress|0x01);//发读命令
+	VL_IIC_Wait_Ack();
 	while(len)
 	{
 		if(len==1)
 		{
-			*buf = IIC1_Read_Byte(0);
+			*buf = VL_IIC_Read_Byte(0);
 		}
 		else
 		{
-			*buf = IIC1_Read_Byte(1);
+			*buf = VL_IIC_Read_Byte(1);
 		}
 		buf++;
 		len--;
 	}
-	IIC1_Stop();//释放总线
+	VL_IIC_Stop();//释放总线
 
 	return 0;
+	
 }
 
-/* write some byte(s) to vl53l0x device */
+//VL53L0X 写多个数据
+//address:地址
+//index:偏移地址
+//pdata:数据指针
+//count:长度 最大65535
 uint8_t VL53L0X_write_multi(uint8_t address, uint8_t index,uint8_t *pdata,uint16_t count)
 {
 	uint8_t status = STATUS_OK;
@@ -75,13 +237,18 @@ uint8_t VL53L0X_write_multi(uint8_t address, uint8_t index,uint8_t *pdata,uint16
 	if(VL_IIC_Write_nByte(address,index,count,pdata))
 	{
 	   status  = STATUS_FAIL;
+
 	}
 
 	return status;
 }
 
 
-/* read some byte(s) from vl53l0x device */
+//VL53L0X 读多个数据
+//address:地址
+//index:偏移地址
+//pdata:数据指针
+//count:长度 最大65535
 uint8_t VL53L0X_read_multi(uint8_t address,uint8_t index,uint8_t *pdata,uint16_t count)
 {
 	uint8_t status = STATUS_OK;
@@ -94,7 +261,10 @@ uint8_t VL53L0X_read_multi(uint8_t address,uint8_t index,uint8_t *pdata,uint16_t
 	return status;
 }
 
-/* write 1 byte to vl53l0x device */
+//VL53L0X 写1个数据(单字节)
+//address:地址
+//index:偏移地址
+//data:数据(8位)
 uint8_t VL53L0X_write_byte(uint8_t address,uint8_t index,uint8_t data)
 {
 	uint8_t status = STATUS_OK;
@@ -104,18 +274,23 @@ uint8_t VL53L0X_write_byte(uint8_t address,uint8_t index,uint8_t data)
 	return status;
 }
 
-/* write 1 word(2 bytes) to vl53l0x device */
+//VL53L0X 写1个数据(双字节)
+//address:地址
+//index:偏移地址
+//data:数据(16位)
 uint8_t VL53L0X_write_word(uint8_t address,uint8_t index,uint16_t data)
 {
 	uint8_t status = STATUS_OK;
 	
 	uint8_t buffer[2];
-
-	buffer[0] = (uint8_t)(data>>8);		// MSB
-	buffer[1] = (uint8_t)(data&0xff);	// LSB
+	
+	//将16位数据拆分成8位
+	buffer[0] = (uint8_t)(data>>8);//高八位
+	buffer[1] = (uint8_t)(data&0xff);//低八位
 	
 	if(index%2==1)
 	{  
+		//串行通信不能处理对非2字节对齐寄存器的字节
 		status = VL53L0X_write_multi(address,index,&buffer[0],1);
 		status = VL53L0X_write_multi(address,index,&buffer[0],1);
 	}else
@@ -126,7 +301,10 @@ uint8_t VL53L0X_write_word(uint8_t address,uint8_t index,uint16_t data)
 	return status;
 }
 
-/* write 1 word(4 bytes) to vl53l0x device */
+//VL53L0X 写1个数据(四字节)
+//address:地址
+//index:偏移地址
+//data:数据(32位)
 uint8_t VL53L0X_write_dword(uint8_t address,uint8_t index,uint32_t data)
 {
 	
@@ -146,7 +324,11 @@ uint8_t VL53L0X_write_dword(uint8_t address,uint8_t index,uint32_t data)
 	
 }
 
-/* read 1 byte from vl53l0x device */
+
+//VL53L0X 读1个数据(单字节)
+//address:地址
+//index:偏移地址
+//data:数据(8位)
 uint8_t VL53L0X_read_byte(uint8_t address,uint8_t index,uint8_t *pdata)
 {
 	uint8_t status = STATUS_OK;
@@ -157,7 +339,10 @@ uint8_t VL53L0X_read_byte(uint8_t address,uint8_t index,uint8_t *pdata)
 	 
 }
 
-/* read 1 word(2 bytes) from vl53l0x device */
+//VL53L0X 读个数据(双字节)
+//address:地址
+//index:偏移地址
+//data:数据(16位)
 uint8_t VL53L0X_read_word(uint8_t address,uint8_t index,uint16_t *pdata)
 {
 	uint8_t status = STATUS_OK;
@@ -172,7 +357,10 @@ uint8_t VL53L0X_read_word(uint8_t address,uint8_t index,uint16_t *pdata)
 	
 }
 
-/* read 1 word(4 bytes) from vl53l0x device */
+//VL53L0X 读1个数据(四字节)
+//address:地址
+//index:偏移地址
+//data:数据(32位)
 uint8_t VL53L0X_read_dword(uint8_t address,uint8_t index,uint32_t *pdata)
 {
 	uint8_t status = STATUS_OK;

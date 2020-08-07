@@ -45,7 +45,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <stdint.h>
 #include <stddef.h>
-#include "main.h" 
+#include "stm32f1xx.h" 
 
 #ifndef NULL
 #error "Error NULL definition should be done. Please add required include "

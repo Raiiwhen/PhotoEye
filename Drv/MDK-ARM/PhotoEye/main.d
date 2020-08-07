@@ -32,7 +32,7 @@ photoeye\main.o: ..\MDK-ARM\oled.h
 photoeye\main.o: ..\MDK-ARM\I2C_Soft.h
 photoeye\main.o: ..\MDK-ARM\uart.h
 photoeye\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-photoeye\main.o: ..\MDK-ARM\vl53l0x.h
+photoeye\main.o: ..\VL53L0X\demo\vl53l0x.h
 photoeye\main.o: ..\VL53L0X\core\inc\vl53l0x_api.h
 photoeye\main.o: ..\VL53L0X\core\inc\vl53l0x_api_strings.h
 photoeye\main.o: ..\VL53L0X\core\inc\vl53l0x_def.h
@@ -42,4 +42,7 @@ photoeye\main.o: ..\VL53L0X\platform\inc\vl53l0x_platform.h
 photoeye\main.o: ..\VL53L0X\platform\inc\vl53l0x_i2c.h
 photoeye\main.o: ..\VL53L0X\platform\inc\vl53l0x_platform_log.h
 photoeye\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-photoeye\main.o: ..\MDK-ARM\vl53l0x.h
+photoeye\main.o: ..\VL53L0X\demo\vl53l0x.h
+photoeye\main.o: ..\VL53L0X\demo\vl53l0x_gen.h
+photoeye\main.o: ..\VL53L0X\demo\vl53l0x_cali.h
+photoeye\main.o: ..\VL53L0X\demo\vl53l0x_it.h

@@ -1,15 +1,5 @@
-/*
- * Copyright (c) 2006-2020, TJ Team
- *
- *
- * Change Logs:
- * Date           Author       Notes
- * 2020-03-17     唐文军       the first version
- */
-
 #include "vl53l0x_platform.h"
 
-/* vl53l0x device write byte sequence */
 VL53L0X_Error VL53L0X_WriteMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t *pdata,uint32_t count)
 {
 	
@@ -35,7 +25,13 @@ VL53L0X_Error VL53L0X_WriteMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t *pdata,
 	
 }
 
-/* vl53l0x device read byte sequence */
+//VL53L0X连续读数据
+//Dev:设备I2C参数结构体
+//index:偏移地址
+//pdata:数据指针
+//count:长度
+//返回值: 0:成功  
+//       其他:错误
 VL53L0X_Error VL53L0X_ReadMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t *pdata,uint32_t count)
 {
 	
@@ -61,7 +57,13 @@ VL53L0X_Error VL53L0X_ReadMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t *pdata,u
 	
 }
 
-/* vl53l0x device write 1 byte */
+//VL53L0X 写单字节寄存器
+//Dev:设备I2C参数结构体
+//index:偏移地址
+//pdata:数据指针
+//count:长度
+//返回值: 0:成功  
+//       其他:失败
 VL53L0X_Error VL53L0X_WrByte(VL53L0X_DEV Dev, uint8_t index, uint8_t data)
 {
 	
@@ -80,7 +82,13 @@ VL53L0X_Error VL53L0X_WrByte(VL53L0X_DEV Dev, uint8_t index, uint8_t data)
 	 
 }
 
-/* vl53l0x device write 1 word(2 bytes) */
+//VL53L0X 写字（2字节）寄存器
+//Dev:设备I2C参数结构体
+//index:偏移地址
+//pdata:数据指针
+//count:长度
+//返回值: 0:成功  
+//       其他:失败
 VL53L0X_Error VL53L0X_WrWord(VL53L0X_DEV Dev, uint8_t index, uint16_t data)
 {
 	
@@ -99,7 +107,13 @@ VL53L0X_Error VL53L0X_WrWord(VL53L0X_DEV Dev, uint8_t index, uint16_t data)
 	
 }
 
-/* vl53l0x device write 1 word(4 bytes) */
+//VL53L0X 写双字（4字节）寄存器
+//Dev:设备I2C参数结构体
+//index:偏移地址
+//pdata:数据指针
+//count:长度
+//返回值: 0:成功  
+//       其他:失败
 VL53L0X_Error VL53L0X_WrDWord(VL53L0X_DEV Dev, uint8_t index, uint32_t data)
 {
 	
@@ -118,7 +132,13 @@ VL53L0X_Error VL53L0X_WrDWord(VL53L0X_DEV Dev, uint8_t index, uint32_t data)
 	
 }
 
-/* vl53l0x device update 1 byte */
+//VL53L0X 威胁安全更新(读/修改/写)单字节寄存器
+//Dev:设备I2C参数结构体
+//index:偏移地址
+//AndData:8位与数据
+//OrData:8位或数据
+//返回值: 0:成功  
+//       其他:错误
 VL53L0X_Error VL53L0X_UpdateByte(VL53L0X_DEV Dev, uint8_t index, uint8_t AndData, uint8_t OrData)
 {
 	 
@@ -149,7 +169,13 @@ VL53L0X_Error VL53L0X_UpdateByte(VL53L0X_DEV Dev, uint8_t index, uint8_t AndData
 	  
 }
 
-/* vl53l0x device read 1 byte */
+//VL53L0X 读单字节寄存器
+//Dev:设备I2C参数结构体
+//index:偏移地址
+//pdata:数据指针
+//count:长度
+//返回值: 0:成功  
+//       其他:错误
 VL53L0X_Error VL53L0X_RdByte(VL53L0X_DEV Dev, uint8_t index, uint8_t *data)
 {
 	
@@ -168,7 +194,13 @@ VL53L0X_Error VL53L0X_RdByte(VL53L0X_DEV Dev, uint8_t index, uint8_t *data)
 
 }
 
-/* vl53l0x device read 1 word(2 bytes) */
+//VL53L0X 读字（2字节）寄存器
+//Dev:设备I2C参数结构体
+//index:偏移地址
+//pdata:数据指针
+//count:长度
+//返回值: 0:成功  
+//       其他:错误
 VL53L0X_Error VL53L0X_RdWord(VL53L0X_DEV Dev, uint8_t index, uint16_t *data)
 {
 	
@@ -187,7 +219,13 @@ VL53L0X_Error VL53L0X_RdWord(VL53L0X_DEV Dev, uint8_t index, uint16_t *data)
 	  
 }
 
-/* vl53l0x device read 1 word(4 bytes) */
+//VL53L0X 读双字（4字节）寄存器
+//Dev:设备I2C参数结构体
+//index:偏移地址
+//pdata:数据指针
+//count:长度
+//返回值: 0:成功  
+//       其他:错误
 VL53L0X_Error  VL53L0X_RdDWord(VL53L0X_DEV Dev, uint8_t index, uint32_t *data)
 {
 	
@@ -205,7 +243,10 @@ VL53L0X_Error  VL53L0X_RdDWord(VL53L0X_DEV Dev, uint8_t index, uint32_t *data)
     return Status;
 }
 
-/* vl53l0x device delay function */
+//VL53L0X 底层延时函数
+//Dev:设备I2C参数结构体
+//返回值: 0:成功  
+//       其他:错误
 #define VL53L0X_POLLINGDELAY_LOOPNB  250
 VL53L0X_Error VL53L0X_PollingDelay(VL53L0X_DEV Dev)
 {

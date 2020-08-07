@@ -3,7 +3,6 @@
 "photoeye\oled.o"
 "photoeye\i2c_soft.o"
 "photoeye\uart.o"
-"photoeye\vl53l0x.o"
 "photoeye\main.o"
 "photoeye\stm32f1xx_it.o"
 "photoeye\stm32f1xx_hal_msp.o"
@@ -30,6 +29,10 @@
 "photoeye\vl53l0x_api_strings.o"
 "photoeye\vl53l0x_i2c.o"
 "photoeye\vl53l0x_platform.o"
+"photoeye\vl53l0x_cali.o"
+"photoeye\vl53l0x_gen.o"
+"photoeye\vl53l0x_it.o"
+"photoeye\vl53l0x.o"
 --library_type=microlib --strict --scatter "PhotoEye\PhotoEye.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

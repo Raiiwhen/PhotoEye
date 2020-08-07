@@ -20,3 +20,12 @@ eMail masterraii@icloud.com
 * 2020-05-22 完成制造和装配
   * 调通LCD(无GUI，非DMA)
   * 添加IIC和UART通信
+
+---
+
+* 2020-08-07 完成Demo
+  * 考试结束，开始摸鱼
+  * 在VSCode中开发
+  * 将LCD改为GRAM刷新
+  * 添加VL53L0x示例代码
+  * 发现安装上的一些小问题

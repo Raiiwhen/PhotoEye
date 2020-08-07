@@ -312,7 +312,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>4</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F103xB</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc; ../Drivers/STM32F1xx_HAL_Driver/Inc; ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy; ../Drivers/CMSIS/Device/ST/STM32F1xx/Include; ../Drivers/CMSIS/Include; ..\MDK-ARM; ..\VL53L0X\platform\inc; ..\VL53L0X\core\inc</IncludePath>
+              <IncludePath>../Inc;   ../Drivers/STM32F1xx_HAL_Driver/Inc;   ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;   ../Drivers/CMSIS/Device/ST/STM32F1xx/Include;   ../Drivers/CMSIS/Include;   ..\MDK-ARM;   ..\VL53L0X\core\inc;   ..\VL53L0X\demo;   ..\VL53L0X\platform\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -406,11 +406,6 @@
               <FileName>uart.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\uart.c</FilePath>
-            </File>
-            <File>
-              <FileName>vl53l0x.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\vl53l0x.c</FilePath>
             </File>
             <File>
               <FileName>main.c</FileName>
@@ -556,6 +551,26 @@
               <FileName>vl53l0x_platform.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\VL53L0X\platform\src\vl53l0x_platform.c</FilePath>
+            </File>
+            <File>
+              <FileName>vl53l0x_cali.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\VL53L0X\demo\vl53l0x_cali.c</FilePath>
+            </File>
+            <File>
+              <FileName>vl53l0x_gen.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\VL53L0X\demo\vl53l0x_gen.c</FilePath>
+            </File>
+            <File>
+              <FileName>vl53l0x_it.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\VL53L0X\demo\vl53l0x_it.c</FilePath>
+            </File>
+            <File>
+              <FileName>vl53l0x.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\VL53L0X\demo\vl53l0x.c</FilePath>
             </File>
           </Files>
         </Group>

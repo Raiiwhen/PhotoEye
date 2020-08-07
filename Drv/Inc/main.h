@@ -53,7 +53,7 @@ extern "C" {
 
 /*LEDs*/
 #define LED_R BIT_ADDR(GPIOA_BASE+12,15)
-#define LED_G BIT_ADDR(GPIOB_BASE+12,3)
+//#define LED_G BIT_ADDR(GPIOB_BASE+12,3)
 #define LED_B BIT_ADDR(GPIOA_BASE+12,12)
 
 #define Beep  BIT_ADDR(GPIOA_BASE+12,11)

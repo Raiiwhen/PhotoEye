@@ -209,19 +209,7 @@ void showhanzi(unsigned int x,unsigned int y,unsigned char index)
 		temp++;
 	 }
 }
-//画点
-//POINT_COLOR:此点的颜色
-void LCD_DrawPoint(uint16_t x,uint16_t y)
-{
-	Address_set(x,y,x,y);//设置光标位置 
-	LCD_WR_DATA(POINT_COLOR); 	    
-} 	 
 
-void LCD_DPC(uint16_t x,uint16_t y)
-{
-	Address_set(x,y,x,y);//设置光标位置 
-	LCD_WR_DATA(POINT_COLOR); 	    
-} 	
 
 uint16_t LCD_ReadPoint(uint16_t x,uint16_t y)
 {
@@ -349,8 +337,10 @@ void LCD_ShowChar(uint16_t x,uint16_t y,uint8_t num,uint8_t mode)
 			temp=asc2_1608[(uint16_t)num*16+pos];		 //调用1608字体
 			for(t=0;t<8;t++)
 		    {                 
-		        if(temp&0x01)POINT_COLOR=colortemp;
-				else POINT_COLOR=BACK_COLOR;
+		        if(temp&0x01)
+					POINT_COLOR=colortemp;
+				else 
+					POINT_COLOR=BACK_COLOR;
 				LCD_WR_DATA(POINT_COLOR);	
 				temp>>=1; 
 				x++;
@@ -420,7 +410,7 @@ void LCD_Show2Num(uint16_t x,uint16_t y,uint16_t num,uint8_t len)
 //x,y:起点坐标  
 //*p:字符串起始地址
 //用16字体
-void LCD_ShowString(uint16_t x,uint16_t y,const uint8_t *p)
+void LCD_ShowString(uint16_t x,uint16_t y, uint8_t *p)
 {
     while(*p!='\0')
     {       
@@ -431,4 +421,91 @@ void LCD_ShowString(uint16_t x,uint16_t y,const uint8_t *p)
         p++;
     }  
 }
+
+#ifdef LCD_BY_GRAM
+
+void LCD_Sync_1bit(void){
+	int i,j;
+	unsigned char *RAM_ptr = LCD_1bit_240120;    
+   
+	Address_set(0,0,X_WIDTH-1,Y_WIDTH-1);
+	for(j=0; j<3600; j++)
+	{
+		for(i=0;i<8;i++)
+		{
+		 	if((*RAM_ptr&(1<<i))==0)
+			{
+				LCD_WR_DATA(BACK_COLOR);
+			} 
+			else
+			{
+				LCD_WR_DATA(POINT_COLOR);
+			}   
+		}
+		RAM_ptr++;
+	 }
+}
+
+void LCD_SyncPart_1bit(int x, int y, int x1, int y1){
+	int i,j,ptr_shift;
+	/*形参列表指LCD屏幕上的坐标，此处取余到8像素为单位，即按byte读取刷新GRAM*/
+	if(
+		x<0||x>239||
+		x>x1||
+		x1<0||x1>239||
+		y<0||y>119||
+		y>y1||
+		y1<0||y1>119)//越界检查
+	return;
+	ptr_shift = (x + y * 240) / 8;
+	unsigned char *RAM_ptr = LCD_1bit_240120 + ptr_shift;
+
+	Address_set(x,y,x1,y1);
+	for(j=0; j<((x1-x)*(y1-y)); j++)
+	{
+		for(i=0;i<8;i++)
+		{
+		 	if((*RAM_ptr&(1<<i))==0)
+			{
+				LCD_WR_DATA(BACK_COLOR);
+			} 
+			else
+			{
+				LCD_WR_DATA(POINT_COLOR);
+			}   
+		}
+		RAM_ptr++;
+	 }
+}
+
+void LCD_DrawPoint(uint16_t x,uint16_t y)
+{
+	unsigned char *RAM_ptr = LCD_1bit_240120;
+	int shift = x + y * 240;
+	*(RAM_ptr + shift / 8) ^= 1 << (7 - shift % 8);    
+} 	 
+
+void LCD_DPC(uint16_t x,uint16_t y)
+{
+	unsigned char *RAM_ptr = LCD_1bit_240120;
+	int shift = x + y * 128;
+	*(RAM_ptr + shift / 8) ^= 1 >> (7 - shift % 8);
+} 	
+
+
+#else
+
+void LCD_DPC(uint16_t x,uint16_t y)
+{
+	Address_set(x,y,x,y);//设置光标位置 
+	LCD_WR_DATA(POINT_COLOR); 	    
+} 	
+//画点
+//POINT_COLOR:此点的颜色
+void LCD_DrawPoint(uint16_t x,uint16_t y)
+{
+	Address_set(x,y,x,y);//设置光标位置 
+	LCD_WR_DATA(POINT_COLOR); 	    
+} 	 
+#endif
 

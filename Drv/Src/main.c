@@ -55,7 +55,8 @@ TIM_HandleTypeDef htim2;
 UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
-
+int VL_DISTANCE;
+char VL_LCD_str[16];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -73,7 +74,15 @@ static void MX_TIM1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void delay_ms_mainc(uint16_t ms){
+  int us, ns;
+  while (ms--)
+  {
+    for (ns = 0; ns < 1000;ns++){
+      for (us = 72; ns > 0;ns--){}  
+    }
+  }
+}
 /* USER CODE END 0 */
 
 /**
@@ -115,37 +124,52 @@ int main(void)
 	__HAL_SPI_ENABLE(&hspi2);
 	SPI2->CR1 &= 0xffffffc7;
 	LCD_Init();
-	
+  LCD_Sync_1bit();
 	HAL_TIM_Base_Start_IT(&htim2);//GUI update function	
-	HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_4);//Beep
-	LED_R = 1;
-	LED_G = 1;
-	LED_B = 1;
+	HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_4);
+	TIM1->CCR4 = 250;
+	
+	LED_R = 0;
+	LED_B = 0;
 	BK = 1;
 	Laser = 1;
-	VL_XSHUT = 1; //enable VL53L0x
-	
-	printf("TOF online.\r\n");
-	
-	VL53L0X_Dev_t vl53l0x_dev;
-	if(VL53L0X_ERROR_NONE != vl53l0x_init(&vl53l0x_dev))
-		printf("vl53l0x_init failed!");
-	if(VL53L0X_ERROR_NONE != vl53l0x_set_mode(&vl53l0x_dev,0))
-		printf("vl53l0x_set_mode status failed!");
+	delay_ms(100);
+  LCD_Clear(BACK_COLOR);
+	TIM1->CCR4 = 0;
+	printf("\r\nPhotoEye online.\r\n");
+
   /* USER CODE END 2 */
  
  
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-		uint16_t color = 0xff00;
-		uint16_t bias = 0;
+  int VL_MODE=0;
   while (1)
   {
     /* USER CODE END WHILE */
-	One_measurement(&vl53l0x_dev);
-
     /* USER CODE BEGIN 3 */
+		VL_DISTANCE =	One_measurement(VL_MODE);
+    switch (VL_MODE)
+    {
+    case 0:
+      LCD_ShowString(16, 16, "Default");
+      break;
+    case 1:
+      LCD_ShowString(16, 16, "High Accurance");
+      break;
+    case 2:
+      LCD_ShowString(16, 16, "Long Distance");
+      break;
+    case 3:
+      LCD_ShowString(16, 16, "High Speed");
+      break;
+    
+    default:
+      break;
+    }
+    sprintf(VL_LCD_str, "d.%4d mm", VL_DISTANCE);
+    LCD_ShowString(16, 32, VL_LCD_str);
   }
   /* USER CODE END 3 */
 }
@@ -285,7 +309,7 @@ static void MX_TIM1_Init(void)
   htim1.Instance = TIM1;
   htim1.Init.Prescaler = 71;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 999;
+  htim1.Init.Period = 499;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -300,7 +324,7 @@ static void MX_TIM1_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 500;
+  sConfigOC.Pulse = 0;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;

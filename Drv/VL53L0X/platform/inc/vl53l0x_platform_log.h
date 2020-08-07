@@ -124,28 +124,28 @@
 #include <stdio.h>
 #include <string.h>
 
-//typedef enum {
-//    TRACE_LEVEL_NONE,
-//    TRACE_LEVEL_ERRORS,
-//    TRACE_LEVEL_WARNING,
-//    TRACE_LEVEL_INFO,
-//    TRACE_LEVEL_DEBUG,
-//    TRACE_LEVEL_ALL,
-//    TRACE_LEVEL_IGNORE
-//}trace_level_t;
+enum {
+    TRACE_LEVEL_NONE,
+    TRACE_LEVEL_ERRORS,
+    TRACE_LEVEL_WARNING,
+    TRACE_LEVEL_INFO,
+    TRACE_LEVEL_DEBUG,
+    TRACE_LEVEL_ALL,
+    TRACE_LEVEL_IGNORE
+};
 
-typedef enum {
+enum {
     TRACE_FUNCTION_NONE = 0,
     TRACE_FUNCTION_I2C  = 1,
     TRACE_FUNCTION_ALL  = 0x7fffffff //all bits except sign
-}trace_function_t;
+};
 
-typedef enum {
+enum {
     TRACE_MODULE_NONE              = 0x0,
     TRACE_MODULE_API               = 0x1,
     TRACE_MODULE_PLATFORM          = 0x2,
     TRACE_MODULE_ALL               = 0x7fffffff //all bits except sign
-}trace_module_t;
+};
 
 
 #define VL53L0X_ErrLog(...) (void)0

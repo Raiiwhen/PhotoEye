@@ -1,3 +1,0 @@
-Change Component Designator: OldDesignator=Debugger? NewDesignator=Debugger
-Change Component Designator: OldDesignator=SPI? NewDesignator=SPI_Slave
-Change Net Name : Old Net Name=NetDebugger?_1 New Net Name=NetDebugger_1

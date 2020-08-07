@@ -2,29 +2,13 @@
 #define __VL53L0_I2C_H
 
 #include "main.h"
+#include "stm32f1xx.h"
 
-//////////////////////////////////////////////////////////////////////////////////	 
-//本程序只供学习使用，未经作者许可，不得用于其它任何用途
-//ALIENTEK 阿波罗STM32F429开发板
-//VL53L0X IIC驱动 代码	   
-//正点原子@ALIENTEK
-//技术论坛:www.openedv.com
-//修改日期:2017/7/1
-//版本：V1.0
-//版权所有，盗版必究。
-//Copyright(C) 广州市星翼电子科技有限公司 2009-2019
-//All rights reserved									  
-//////////////////////////////////////////////////////////////////////////////////
-
-//IO方向设置
-#define VL_SDA_IN()  {GPIOJ->MODER&=~(3<<(10*2));GPIOJ->MODER|=0<<10*2;}	//PB10输入模式
-#define VL_SDA_OUT() {GPIOJ->MODER&=~(3<<(10*2));GPIOJ->MODER|=1<<10*2;}    //PB10输出模式
-
-
-//IO操作函数	 
-#define VL_IIC_SCL    PJout(8) 			//SCL
-#define VL_IIC_SDA    PJout(10) 		//SDA	 
-#define VL_READ_SDA   PJin(10) 		    //输入SDA 
+#define VL_IIC_SCL VL_SCL
+#define VL_IIC_SDA VL_SDA_WR
+#define VL_READ_SDA VL_SDA_RD
+#define VL_SDA_IN() {GPIOB->CRL &= 0xff0fffff; GPIOB->CRL |= 0x00400000; }
+#define VL_SDA_OUT(){GPIOB->CRL &= 0xff0fffff; GPIOB->CRL |= 0x00100000; }
 
 //状态
 #define STATUS_OK       0x00

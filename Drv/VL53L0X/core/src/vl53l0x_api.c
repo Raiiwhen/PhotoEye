@@ -2560,6 +2560,7 @@ VL53L0X_Error VL53L0X_PerformSingleRangingMeasurement(VL53L0X_DEV Dev,
 	if (Status == VL53L0X_ERROR_NONE)
 		Status = VL53L0X_PerformSingleMeasurement(Dev);
 
+
 	if (Status == VL53L0X_ERROR_NONE)
 		Status = VL53L0X_GetRangingMeasurementData(Dev,
 			pRangingMeasurementData);

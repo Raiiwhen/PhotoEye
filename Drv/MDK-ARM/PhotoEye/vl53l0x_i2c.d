@@ -29,4 +29,3 @@ photoeye\vl53l0x_i2c.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h
 photoeye\vl53l0x_i2c.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 photoeye\vl53l0x_i2c.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 photoeye\vl53l0x_i2c.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
-photoeye\vl53l0x_i2c.o: ..\MDK-ARM\I2C_Soft.h

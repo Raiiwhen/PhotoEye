@@ -167,7 +167,7 @@ void IIC1_Test(void){
 }
 
 void IIC1_Slave_List(void){
-	uint8_t i=0,j=0,res = 0;
+	uint8_t i=0;
 	uint8_t ucErrTime = 0;
 	uint8_t CNT = 0;
 	printf("Console>IIC1: List all devices.\r\n");
@@ -191,6 +191,7 @@ void IIC1_Slave_List(void){
 		}
 		if(ucErrTime<250){
 			printf("Console>IIC1:  |DeviceCNT.%3d, IIC_ADDR = %#x\r\n",CNT, i);
+//			int j=0,res = 0
 //			for(;j<255;j++){
 //				res = IIC1_Read_One_Byte(CNT,j);
 //				printf("Console>IIC1:  |reg.%2X, %2X\r\n",j, res);
